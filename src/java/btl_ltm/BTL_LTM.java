@@ -119,6 +119,7 @@ public class BTL_LTM {
         return responseContent.toString();
     }
 
+    // lay ra content match = regex
     public static String RegexHtml(String html, String regex) {
         Pattern pattern = Pattern.compile(regex, Pattern.MULTILINE | Pattern.DOTALL);
         Matcher matcher = pattern.matcher(html);
@@ -129,6 +130,7 @@ public class BTL_LTM {
         return match;
     }
 
+    // đệ qui để lấy hết menu
     public static void Try(Elements e2, int j, int a[]) {
         //       System.out.println(e2.toString());
 
@@ -144,7 +146,6 @@ public class BTL_LTM {
                 System.out.println("sub " + j  + "; title" + ": " + title + "; Link " + ": " + link);
                 System.out.println(a[i]);
             } else {
-                j--;
                 a[i]++;
                 Elements e5 = e2.get(i).children();
 //                System.out.println(e5.toString());
