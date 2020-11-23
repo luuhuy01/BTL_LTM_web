@@ -34,17 +34,27 @@ public class BTL_LTM {
 
     public static void main(String[] args) {
         String resHttp = getHttp("https://portal.ptit.edu.vn/");
-
-        ArrayList<String> arr = new ArrayList<>();
         Document doc = Jsoup.parse(resHttp);
         Element e1 = doc.getElementById("menu-main-menu");
         Elements e2 = e1.children();
         System.out.println(e2.size());
         int a[] = new int[1000];
-        for (int i = 0; i < 1000; i++) {
-            a[i] = 0;
+        ArrayList<Menu> arr = new ArrayList<>();
+        arr = Try(e2, 0);                // gán mảng các menu.
+
+        // crawl data từng menu
+        for (int i = 0; i < arr.size(); i++) {
+            String html = getHttp(arr.get(i).getUrl());
+            Document d = Jsoup.parse(html);
+            Elements ex1 = d.getElementsByClass("sections_group");
+            for(int j=0; j<ex1.size(); j++){
+//               Elements ex2 = ex1.get(j).getElementsByTag("a");
+//               for(int k=0; k<ex2.size(); k++){
+//                   System.out.println(ex2.get(k).text());
+//               }
+                 System.out.println(ex1.get(j).text());
+            }
         }
-        Try(e2, 0, a);
 //        String menu1 = RegexHtml(resHttp,"<div class=\"menu_wrapper\\\">(.*?)<\\/div>");
 //        System.out.println(menu1);
 //        System.out.println(e.text());
@@ -67,25 +77,6 @@ public class BTL_LTM {
             connection = (HttpURLConnection) url.openConnection();
 
             connection.setUseCaches(false);
-//            connection.setRequestMethod("POST");
-//            connection.setRequestProperty("Host", "qldt.ptit.edu.vn");
-//            connection.setRequestProperty("User-Agent", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/88.0.4302.0 Safari/537.36");
-//            connection.setRequestProperty("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9");
-//            connection.setRequestProperty("Cache-Control", "max-age=0");
-//            connection.setRequestProperty("Accept-Language", "vi,en;q=0.9,vi-VN;q=0.8,fr-FR;q=0.7,fr;q=0.6,en-US;q=0.5,ko;q=0.4");
-//            connection.setRequestProperty("Origin", "http://qldt.ptit.edu.vn");
-//            String cookie = "ASP.NET_SessionId=41nvge45rhcjyz45q4zqlxnb; SL_GWPT_Show_Hide_tmp=1; SL_wptGlobTipTmp=1";
-//            String[] temp = cookie.split(";");
-//            for (int i = 0; i < temp.length; i++) {
-//                connection.setRequestProperty("Cookie", temp[i]);
-//            }
-//
-//            connection.setRequestProperty("Connection", "keep-alive");
-//            connection.setRequestProperty("Referer", "http://qldt.ptit.edu.vn/default.aspx");   
-//            connection.setRequestProperty("Upgrade-Insecure-Requests","1");
-
-//            connection.setRequestProperty("Content-Type", "multipart/form-data; boundary=----WebKitFormBoundarysbqhLkOyWSQGlpIE");
-//            connection.setRequestProperty("Content-Length", "30033");
             connection.setDoOutput(true);
             connection.setDoInput(true);
 
@@ -98,14 +89,21 @@ public class BTL_LTM {
 
             connection.connect();
             System.out.println(connection.getResponseMessage());
-
-            reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-            while ((line = reader.readLine()) != null) {
-                responseContent.append(line);
-                osw.write(line);
+            if (status < 400) {
+                reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                while ((line = reader.readLine()) != null) {
+                    responseContent.append(line);
+                    osw.write(line);
+                }
+                reader.close();
+            } else {
+                reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                while ((line = reader.readLine()) != null) {
+                    responseContent.append(line);
+                    osw.write(line);
+                }
+                reader.close();
             }
-            reader.close();
-
             // System.out.println(responseContent.toString());
             // sử dụng jsoup để query html 
             osw.close();
@@ -113,7 +111,7 @@ public class BTL_LTM {
 
             connection.disconnect();
         } catch (MalformedURLException ex) {
-
+            ex.printStackTrace();
         } catch (IOException ex) {
             Logger.getLogger(BTL_LTM.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -134,39 +132,30 @@ public class BTL_LTM {
     public static ArrayList<Menu> arrMenu = new ArrayList<>();
 
     // đệ qui để lấy hết menu
-    public static ArrayList<Menu> Try(Elements e2, int j, int a[]) {
-        //       System.out.println(e2.toString());
+    public static ArrayList<Menu> Try(Elements e2, int j) {
 
         for (int i = 0; i < e2.size(); i++) {
+
             String link = e2.get(i).attr("href");
             Elements e4 = e2.get(i).getElementsByTag("span");
             String title = "";
 
             for (int k = 0; k < e4.size(); k++) {
-                title = e4.text();
+                title = e4.text();                           // get tiêu đề menu
             }
             if (!link.isEmpty()) {
-                System.out.println("sub " + j + "; title" + ": " + title + "; Link " + ": " + link);
-                String html = getHttp(link);
-                System.out.println(html);
-                Menu menu = new  Menu(title, link, j);
+                Menu menu = new Menu(title, link, j);
+                System.out.println(menu);
                 arrMenu.add(menu);
             } else {
-                a[i]++;
                 Elements e5 = e2.get(i).children();
-//                System.out.println(e5.toString());
-//                for (int m = 0; m < e5.size(); m++) {
-//                    Elements e6 = e5.get(m).getElementsByTag("a");
-//                    System.out.println(e6.text());
-//                }
-                Try(e5, i, a);
+                Try(e5, i);
                 j--;
             }
-//            }
-//            String str = e.text();
-//            arr.add(str);
-//            System.out.println("context"+(i+1)+": "+str);
         }
         return arrMenu;
     }
+    
+    // tách nội dung trong từng menu
+    
 }

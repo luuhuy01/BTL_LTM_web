@@ -9,13 +9,14 @@ package model;
  *
  * @author luuhu
  */
-
 public class Menu {
+
     private int id;
     private String name;
     private String url;
     private int idRoot;
-
+    private int []idPost;
+    
     public Menu() {
     }
 
@@ -56,5 +57,10 @@ public class Menu {
     public void setIdRoot(int idRoot) {
         this.idRoot = idRoot;
     }
-    
+
+    @Override
+    public String toString() {
+        return "Menu{" + "id=" + id + ", name=" + name + ", url=" + url + ", idRoot=" + idRoot + '}';
+    }
+
 }
