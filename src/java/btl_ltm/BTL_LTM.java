@@ -20,6 +20,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import model.Menu;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -130,8 +131,10 @@ public class BTL_LTM {
         return match;
     }
 
+    public static ArrayList<Menu> arrMenu = new ArrayList<>();
+
     // đệ qui để lấy hết menu
-    public static void Try(Elements e2, int j, int a[]) {
+    public static ArrayList<Menu> Try(Elements e2, int j, int a[]) {
         //       System.out.println(e2.toString());
 
         for (int i = 0; i < e2.size(); i++) {
@@ -143,8 +146,11 @@ public class BTL_LTM {
                 title = e4.text();
             }
             if (!link.isEmpty()) {
-                System.out.println("sub " + j  + "; title" + ": " + title + "; Link " + ": " + link);
-                System.out.println(a[i]);
+                System.out.println("sub " + j + "; title" + ": " + title + "; Link " + ": " + link);
+                String html = getHttp(link);
+                System.out.println(html);
+                Menu menu = new  Menu(title, link, j);
+                arrMenu.add(menu);
             } else {
                 a[i]++;
                 Elements e5 = e2.get(i).children();
@@ -161,6 +167,6 @@ public class BTL_LTM {
 //            arr.add(str);
 //            System.out.println("context"+(i+1)+": "+str);
         }
-
+        return arrMenu;
     }
 }
