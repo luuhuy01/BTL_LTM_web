@@ -144,7 +144,7 @@ public class BTL_LTM {
                 title = e4.text();                           // get tiêu đề menu
             }
             if (!link.isEmpty()) {
-                Menu menu = new Menu(title, link, j);
+                Menu menu = new Menu(title, link);
                 System.out.println(menu);
                 arrMenu.add(menu);
             } else {

@@ -12,15 +12,15 @@ package model;
 public class Post {
     private int id;
     private String title;
-    private String content;
-    private int idMenu;
+    private String urlImage;
     
     public Post() {
     }
 
-    public Post(String title, String content) {
+    public Post(String title, String urlImage) {
+        this.id = id;
         this.title = title;
-        this.content = content;
+        this.urlImage = urlImage;
     }
 
     public int getId() {
@@ -39,12 +39,12 @@ public class Post {
         this.title = title;
     }
 
-    public String getContent() {
-        return content;
+    public String getUrlImage() {
+        return urlImage;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setUrlImage(String urlImage) {
+        this.urlImage = urlImage;
     }
     
 }

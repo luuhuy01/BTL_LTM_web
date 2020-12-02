@@ -14,16 +14,13 @@ public class Menu {
     private int id;
     private String name;
     private String url;
-    private int idRoot;
-    private int []idPost;
     
     public Menu() {
     }
 
-    public Menu(String name, String url, int idRoot) {
+    public Menu(String name, String url) {
         this.name = name;
         this.url = url;
-        this.idRoot = idRoot;
     }
 
     public int getId() {
@@ -50,17 +47,5 @@ public class Menu {
         this.url = url;
     }
 
-    public int getIdRoot() {
-        return idRoot;
-    }
-
-    public void setIdRoot(int idRoot) {
-        this.idRoot = idRoot;
-    }
-
-    @Override
-    public String toString() {
-        return "Menu{" + "id=" + id + ", name=" + name + ", url=" + url + ", idRoot=" + idRoot + '}';
-    }
-
+    
 }
